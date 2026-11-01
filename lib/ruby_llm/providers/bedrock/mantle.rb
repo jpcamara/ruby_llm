@@ -12,9 +12,25 @@ module RubyLLM
         SIGNING_SERVICE = 'bedrock-mantle'
 
         # Mantle serves Claude on the Anthropic Messages API and everything
-        # else on one of the two OpenAI surfaces. Only these models answer on
-        # v1/responses; the rest of the non-Claude catalog answers on
-        # v1/chat/completions and rejects v1/responses outright.
+        # else on one of three OpenAI surfaces. OpenAI's own GPT models answer
+        # only on openai/v1/responses. These other models answer on
+        # v1/responses. The rest of the non-Claude catalog answers on
+        # v1/chat/completions and rejects both Responses paths outright.
+        OPENAI_RESPONSES_MODELS = %w[
+          openai.gpt-5.4
+          openai.gpt-5.4-2026-03-05
+          openai.gpt-5.5
+          openai.gpt-5.5-2026-04-23
+          openai.gpt-5.6-luna
+          openai.gpt-5.6-sol
+          openai.gpt-5.6-terra
+          openai.gpt-6-astra
+          openai.gpt-6-luna
+          openai.gpt-6-sol
+          openai.gpt-6.1-sol
+          openai.gpt-6.1-terra
+        ].freeze
+
         RESPONSES_MODELS = %w[
           google.gemma-4-26b-a4b
           google.gemma-4-31b

@@ -80,7 +80,7 @@ chat = RubyLLM.chat(model: "{{ site.models.openrouter_provider_tools }}",
 response = chat.ask "Run Python to calculate 17 times 23."
 ```
 
-On OpenAI and Azure, `:web_search` also opens pages; a separate `:web_fetch` tool is unnecessary. Bedrock web search requires a Nova 2 model. Mistral's default protocol already supports image generation and configured MCP connectors.
+On OpenAI and Azure, `:web_search` also opens pages; a separate `:web_fetch` tool is unnecessary. On Bedrock, `:web_search` uses Nova grounding on Nova 2 models and OpenAI's web search on the GPT models Mantle hosts. Mistral's default protocol already supports image generation and configured MCP connectors.
 
 ## Native Client Toolsets
 

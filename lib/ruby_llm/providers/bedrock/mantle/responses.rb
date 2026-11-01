@@ -4,9 +4,8 @@ module RubyLLM
   module Providers
     class Bedrock
       module Mantle
-        # The OpenAI Responses API on the bedrock-mantle endpoint, which
-        # serves every non-Claude model mantle hosts: OpenAI, Qwen, Mistral,
-        # DeepSeek, and the rest.
+        # The OpenAI Responses API on bedrock-mantle's v1/responses path,
+        # which serves the open-weight models in RESPONSES_MODELS.
         class Responses < Protocols::Responses
           include Mantle
 
