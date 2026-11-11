@@ -10,6 +10,7 @@ module RubyLLM
       protocol :converse, Protocols::Converse, batches: Protocols::Converse::Batches
       protocol :mantle_anthropic, Bedrock::Mantle::Anthropic
       protocol :mantle_responses, Bedrock::Mantle::Responses
+      protocol :mantle_openai_responses, Bedrock::Mantle::OpenAIResponses
       protocol :mantle_chat_completions, Bedrock::Mantle::ChatCompletions
       protocol :voxtral_transcription, Bedrock::Mantle::Voxtral
       protocol :titan_text_embeddings, Protocols::InvokeModel::TitanTextEmbeddings,
@@ -267,6 +268,7 @@ module RubyLLM
 
       def mantle_protocol_for(model_id)
         return protocols[:mantle_anthropic] if model_id.start_with?('anthropic.')
+        return protocols[:mantle_openai_responses] if Bedrock::Mantle::OPENAI_RESPONSES_MODELS.include?(model_id)
         return protocols[:mantle_responses] if Bedrock::Mantle::RESPONSES_MODELS.include?(model_id)
 
         protocols[:mantle_chat_completions]

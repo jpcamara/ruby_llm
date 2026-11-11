@@ -31,6 +31,13 @@ RSpec.describe RubyLLM::Providers::Bedrock::Mantle do
       end
     end
 
+    it 'routes the GPT models mantle hosts to the OpenAI Responses protocol' do
+      %w[openai.gpt-5.4 openai.gpt-5.6-luna openai.gpt-5.6-terra openai.gpt-6-astra].each do |id|
+        model = RubyLLM::Model.default(id, 'bedrock')
+        expect(provider.protocol_for(model)).to eq(described_class::OpenAIResponses)
+      end
+    end
+
     it 'routes the rest of the non-Claude catalog to the Chat Completions protocol' do
       %w[
         nvidia.nemotron-nano-9b-v2
@@ -173,6 +180,7 @@ RSpec.describe RubyLLM::Providers::Bedrock::Mantle do
     it 'points each protocol at its own mantle path' do
       expect(described_class::Anthropic.allocate.completion_url).to eq('anthropic/v1/messages')
       expect(described_class::Responses.allocate.completion_url).to eq('v1/responses')
+      expect(described_class::OpenAIResponses.allocate.completion_url).to eq('openai/v1/responses')
       expect(described_class::ChatCompletions.allocate.completion_url).to eq('v1/chat/completions')
     end
 
@@ -241,6 +249,27 @@ RSpec.describe RubyLLM::Providers::Bedrock::Mantle do
       response = chat.with_tools(BedrockMantleWeather).ask("What's the weather in Berlin? Use the weather tool.")
 
       expect(response.content).to include('15')
+    end
+  end
+
+  describe 'openai responses chat', :live do
+    let(:chat) { RubyLLM.chat(model: 'openai.gpt-5.6-luna', provider: :bedrock) }
+
+    it 'chats through the OpenAI Responses surface' do
+      response = chat.ask('Say OK and nothing else.')
+
+      expect(response.content).to include('OK')
+      expect(response.tokens.input).to be_positive
+      expect(response.tokens.output).to be_positive
+    end
+
+    it 'searches the web through the OpenAI Responses surface' do
+      response = chat.with_provider_tools(web_search: { external_web_access: false })
+                     .ask('Search the web: what is the latest stable Ruby release? Cite your source.')
+
+      expect(response.content).to be_present
+      expect(response.server_tool_calls.map(&:type)).to include('web_search_call')
+      expect(response.citations).not_to be_empty
     end
   end
 end

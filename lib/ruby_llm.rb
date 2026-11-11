@@ -34,6 +34,7 @@ loader.inflector.inflect(
   'mxc' => 'MXC',
   'ocr' => 'OCR',
   'openai' => 'OpenAI',
+  'openai_responses' => 'OpenAIResponses',
   'open_telemetry' => 'OpenTelemetry',
   'openrouter' => 'OpenRouter',
   'pdf' => 'PDF',
